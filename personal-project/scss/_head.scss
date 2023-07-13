@@ -1,0 +1,43 @@
+$main-color: rgb(149, 248, 145);
+$main-margin: 5%;
+
+.head-dom {
+  width: 100%;
+  position: fixed;
+  background-color: #fff;
+  z-index: 10;
+}
+
+.top-head {
+  margin: 4em $main-margin 0;
+  display: flex;
+  justify-content: space-between;
+}
+
+.main-logo {
+  display: inline-block;
+  font-size: 3em;
+  font-weight: bolder;
+}
+
+.user-zone {
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: flex-end;
+  justify-content: space-evenly;
+}
+
+.nav-bar {
+  margin: 3em $main-margin 0;
+}
+
+.nav-list {
+  display: flex;
+  justify-content: space-evenly;
+  font-size: 1.6em;
+  font-weight: 500;
+}
+
+.nav-link:hover {
+  font-weight: 600;
+}
