@@ -37,13 +37,14 @@ const PlaceDetailDOM = () => {
     // 이미지정보 api
     async function imgData() {
       const res = await fetch(
-        `http://apis.data.go.kr/B551011/KorService1/detailImage1?MobileOS=WIN&MobileApp=zoroTravel&contentId=${contentId}&imageYN=Y&subImageYN=Y&_type=json&serviceKey=${apiKey}`
+        `http://apis.data.go.kr/B551011/KorService1/detailImage1?contentId=${contentId}&MobileOS=WIN&MobileApp=zoroTravel&imageYN=Y&subImageYN=Y&_type=json&serviceKey=${apiKey}`
       );
-      // console.log(res);
+      console.log(res);
       const result = await res.json();
-      // console.log(result);
+      console.log(result);
       const infor: Array<any> = result.response.body.items.item;
-      // console.log(infor);
+      console.log(infor);
+      console.log(infor.length);
       setImgInfo(infor);
     }
     baseData();

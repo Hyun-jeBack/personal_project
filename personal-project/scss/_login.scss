@@ -1,0 +1,190 @@
+.login-tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 30em;
+  margin: 50vh 50%;
+  transform: translateX(-50%) translateY(-50%);
+}
+
+.main-logo {
+  font-size: 3em;
+}
+
+.base-typography > h2 {
+  font-size: 2em;
+  color: #000;
+  line-height: 3.3em;
+}
+
+.sign-in-google {
+  margin-right: 0.8em;
+}
+
+.btn--google {
+  background: #ffffff;
+  font-size: 1.4rem;
+  font-weight: 500;
+  color: #121212;
+  border-radius: 0.2;
+  box-shadow: 1px 3px 5px rgba(0, 0, 0, 0.25);
+}
+
+.btn--wide {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 2.5em;
+  padding: 0 3.6em;
+  font-size: 1.6em;
+  line-height: 2.5;
+}
+
+.google-logo {
+  width: 2em;
+  padding-right: 0.3em;
+}
+
+.sign-in__divider {
+  height: 0.1em;
+  margin: 4em 0 3em 0;
+  border-top: 0.1em solid #e0e0e0;
+  border-width: 1px 0 0;
+  border-style: solid;
+  color: #000;
+  text-align: center;
+  overflow: visible;
+}
+
+.sign-in__divider:after {
+  content: '또는 이메일로 로그인';
+  position: relative;
+  top: -0.5em;
+  padding: 0 1.6em;
+  background: #fff;
+}
+
+.sign-in-form__block {
+  position: relative;
+  margin-bottom: 2em;
+}
+
+.sign-in-form__label {
+  margin-bottom: 0.5em;
+}
+
+.input__container {
+  position: relative;
+  box-sizing: border-box;
+  width: 100%;
+  height: 3em;
+  border: 0.1em solid #d3d3d3;
+  border-radius: 0.2em;
+  background: #fff;
+}
+
+.input__container > input {
+  width: 100%;
+  border: 0;
+  box-sizing: border-box;
+  background: transparent;
+  font-size: 1.2em;
+  padding: 0.5em;
+  color: #000;
+  display: block;
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  text-overflow: ellipsis;
+  word-wrap: normal;
+}
+
+.input__container > input::placeholder {
+  background-color: transparent;
+  color: #d3d3d3;
+}
+
+.sign-in-form__help {
+  display: flex;
+  align-items: center;
+  font-size: 1.2em;
+  color: #333;
+}
+
+.sign-in-form__btn {
+  position: relative;
+  align-items: center;
+  justify-content: center;
+  height: 2.5em;
+  margin: 2em 0;
+  padding: 0.8em 1.2em;
+  border-width: 0.1em;
+  border-style: solid;
+  border-radius: 0.2em;
+  font-weight: 400;
+  font-size: 1.6em;
+  border-color: #f5f5f5;
+  background-color: #f5f5f5;
+  color: #d3d3d3;
+  transition: background-color 0.2s;
+}
+
+.sign-in__sign-up-btn {
+  text-align: center;
+}
+
+.text-button--primary {
+  color: #858585;
+  transition: all 0.1s ease-out;
+}
+
+.text-button--primary:hover {
+  color: #000;
+}
+
+// 로그인 이메일 눌렀을때
+.btn--primary {
+  border-color: #000;
+  background-color: #000;
+  color: #fff;
+}
+
+// .sign-in-notice {
+//   margin-top: 4rem;
+//   padding: 1.6rem;
+//   border: 0.1rem solid #f5f5f5;
+//   border-radius: 0.2rem;
+//   font-size: 1.3rem;
+// }
+
+// .sign-in-notice__row {
+//   display: flex;
+//   align-items: center;
+//   justify-content: space-between;
+// }
+
+// .login-taxt {
+//   margin-top: 2em;
+//   font-size: 1.5em;
+// }
+
+// .id-input {
+//   margin-top: 1em;
+// }
+
+// .password-input {
+//   margin-top: 1em;
+// }
+
+// .login-button {
+//   margin-top: 1em;
+// }
+
+// .or-text {
+//   margin-top: 1em;
+// }
+
+// .google-login {
+//   margin-top: 1em;
+// }
