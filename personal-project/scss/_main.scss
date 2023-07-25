@@ -8,13 +8,14 @@ $main-margin: 5%;
 
 .main-box {
   margin: 3em $main-margin * 2;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-around;
+  // display: flex;
+  // flex-wrap: wrap;
+  // justify-content: space-around;
   max-width: 100em;
   //min-height: calc(100vh - 100em);
-  //display: grid;
-  //grid-template-columns: 1fr 1fr 1fr 1fr;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  justify-items: center;
 }
 
 .cheack-box {

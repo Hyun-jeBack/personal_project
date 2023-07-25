@@ -1,7 +1,4 @@
-/* import React from 'react'; */
-import AreaSelectBox from '../components/areaSelectBox';
 import PlaceBox from '../components/placeBox';
-import SearchBox from '../components/searchBox';
 import FooterDOM from './footerDOM';
 
 const MainDOM = () => {
@@ -11,11 +8,7 @@ const MainDOM = () => {
 
   return (
     <>
-      <SearchBox />
-      <AreaSelectBox></AreaSelectBox>
-      <div className="main-box">
-        <PlaceBox numOfRows={20} contentTypeId={randomContentTypeId}></PlaceBox>
-      </div>
+      <PlaceBox numOfRows={20} contentTypeId={randomContentTypeId}></PlaceBox>
       <FooterDOM />
     </>
   );

@@ -51,6 +51,8 @@ const PlaceDetailDOM = () => {
     imgData();
   }, []);
 
+  const starClick = () => {};
+
   return (
     <>
       <div className="place-detail-dom">
@@ -72,6 +74,7 @@ const PlaceDetailDOM = () => {
             <div className="base-high">
               {baseInfo.length > 0 && <h3 className="place-title">{baseInfo[0].title}</h3>}
               <svg
+                onClick={starClick}
                 xmlns="http://www.w3.org/2000/svg"
                 width="16"
                 height="16"

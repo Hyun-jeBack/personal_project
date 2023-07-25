@@ -5,6 +5,7 @@ import WishlistTab from '../dom/wishlistTab';
 import { CultureTab, FestivalTab, LeportsTab, RestaurantTab, ShoppingTab, TourismTab } from '../dom/categoriesTab';
 import LoginTab from '../dom/loginTab';
 import JoinMembership from '../dom/joinMembership';
+import SearchTab from '../dom/searchTab';
 
 const Routers = () => {
   return (
@@ -13,6 +14,7 @@ const Routers = () => {
       <Route path={'placeDetailTab/:contentid'} element={<PlaceDetailDOM />}></Route>
       <Route path={'wishlistTab'} element={<WishlistTab />}></Route>
       <Route path={'loginTab'} element={<LoginTab />}></Route>
+      <Route path={'searchTab'} element={<SearchTab />}></Route>
       <Route path={'joinMembership'} element={<JoinMembership />}></Route>
       <Route path={'tourismTab'} element={<TourismTab />}></Route>
       <Route path={'cultureTab'} element={<CultureTab />}></Route>

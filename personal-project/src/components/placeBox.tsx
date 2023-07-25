@@ -1,8 +1,11 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import AreaSelectBox from './areaSelectBox';
+import SearchBox from './searchBox';
 
 const PlaceBox = ({ numOfRows, contentTypeId }: { numOfRows: Number; contentTypeId?: Number }) => {
   const [information, setInformation] = useState<Array<any>>([]);
+  const [selectedAreaCode, setSelectedAreaCode] = useState<number>(1);
 
   useEffect(() => {
     async function fetchData() {
@@ -14,7 +17,7 @@ const PlaceBox = ({ numOfRows, contentTypeId }: { numOfRows: Number; contentType
       //const numOfRows = 20;
 
       const res = await fetch(
-        `https://apis.data.go.kr/B551011/KorService1/areaBasedList1?numOfRows=${numOfRows}&pageNo=${pageNo}&contentTypeId=${contentTypeId}&arrange=R&MobileOS=WIN&MobileApp=zoroTravel&_type=json&serviceKey=${apiKey}&areaCode=1`
+        `https://apis.data.go.kr/B551011/KorService1/areaBasedList1?numOfRows=${numOfRows}&pageNo=${pageNo}&contentTypeId=${contentTypeId}&arrange=R&MobileOS=WIN&MobileApp=zoroTravel&_type=json&serviceKey=${apiKey}&areaCode=${selectedAreaCode}`
       );
       //console.log(res);
       const result = await res.json();
@@ -24,7 +27,11 @@ const PlaceBox = ({ numOfRows, contentTypeId }: { numOfRows: Number; contentType
       setInformation(infor);
     }
     fetchData();
-  }, []);
+  }, [selectedAreaCode, numOfRows, contentTypeId]);
+
+  const handleAreaSelect = (areaCode: number) => {
+    setSelectedAreaCode(areaCode);
+  };
 
   if (!information) {
     return <div>Loadig...</div>;
@@ -32,25 +39,29 @@ const PlaceBox = ({ numOfRows, contentTypeId }: { numOfRows: Number; contentType
 
   return (
     <>
-      {information.map((item: any) => (
-        <div className="place-box" key={item.contentid}>
-          <Link
-            to={`/placeDetailTab/${item.contentid}?contentId=${item.contentid}&contentTypeId=${item.contenttypeid}`}
-            className="detail-place-tab">
-            <img className="place-img" src={item.firstimage} alt={item.title} />
-          </Link>
-          <span className="place-name">
-            <Link to={`/placeDetailTab/${item.contentid}`} className="detail-place-tab">
-              {item.title}
+      <SearchBox onSearchContent={information} />
+      <AreaSelectBox onAreaSelect={handleAreaSelect}></AreaSelectBox>
+      <div className="main-box">
+        {information.map((item: any) => (
+          <div className="place-box" key={item.contentid}>
+            <Link
+              to={`/placeDetailTab/${item.contentid}?contentId=${item.contentid}&contentTypeId=${item.contenttypeid}`}
+              className="detail-place-tab">
+              <img className="place-img" src={item.firstimage} alt={item.title} />
             </Link>
-          </span>
-          <span className="palce-location">
-            <Link to={`/placeDetailTab/${item.contentid}`} className="detail-place-tab">
-              {item.addr1}
-            </Link>
-          </span>
-        </div>
-      ))}
+            <span className="place-name">
+              <Link to={`/placeDetailTab/${item.contentid}`} className="detail-place-tab">
+                {item.title}
+              </Link>
+            </span>
+            <span className="palce-location">
+              <Link to={`/placeDetailTab/${item.contentid}`} className="detail-place-tab">
+                {item.addr1}
+              </Link>
+            </span>
+          </div>
+        ))}
+      </div>
     </>
   );
 };

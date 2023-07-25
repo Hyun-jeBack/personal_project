@@ -1,65 +1,133 @@
-import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { auth } from '../firebase/firebase.tsx';
+import { useState, useEffect, useCallback } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { auth, db } from '../firebase/firebase.js';
+import { addDoc, collection } from 'firebase/firestore';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from 'firebase/auth';
-import { useNavigate } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState } from '../type/type.js';
 
 const JoinMembership = () => {
-  const navigate = useNavigate();
   const [isFormValid, setIsFormValid] = useState(false);
+  // const history = useHistory();
 
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [passwordCheck, setPasswordCheck] = useState('');
+  // const [name, setName] = useState('');
+  // const [email, setEmail] = useState('');
+  // const [password, setPassword] = useState('');
+  // const [passwordCheck, setPasswordCheck] = useState('');
 
-  const onChange = (event: { target: { name: any; value: any } }) => {
-    const {
-      target: { name, value },
-    } = event;
-    if (name === 'name') {
-      setName(value);
-    }
-    if (name === 'email') {
-      setEmail(value);
-    }
-    if (name === 'password') {
-      setPassword(value);
-    }
-    if (name === 'passwordCheck') {
-      setPasswordCheck(value);
-    }
-  };
+  //  리덕스 스토어에 저장한 요소를 useselector로 불러
+  const {
+    // 이메일,닉네임,비밀번호,비밀번호 확인
+    email,
+    password,
+    passwordCheck,
+    nickName,
+    // 오류메세지
+    emailMessage,
+    passwordMessage,
+    passwordCheckMessage,
+    nickNameMessage,
+    // 유효성 검사
+    isEmail,
+    isNickName,
+    isPassword,
+    isPasswordCheck,
+  } = useSelector((state: RootState) => state);
 
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    const { value } = event.currentTarget;
-    // 한글인지 체크 (한글은 2바이트, 영문 및 숫자는 1바이트로 처리)
-    const isKorean = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/.test(value);
-    // 스페이스바 입력 막기
-    if (event.key === ' ' || (isKorean && event.key === 'Spacebar')) {
-      event.preventDefault();
-    }
-  };
+  const dispatch = useDispatch();
 
-  const signUp = async () => {
-    try {
-      //createUserWithEmailAndPassword 함수를 통해 회원가입을 하게 될 경우, 자동으로 로그인 됩니다.
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      // 회원가입 성공시 userCrendential이라는 객체 안에 다양한 유저 정보가 담김.
-      console.log(userCredential);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  // 사용자 인증 정보 확인
-  useEffect(() => {
-    setIsFormValid(Boolean(email && password && passwordCheck && name));
-    onAuthStateChanged(auth, user => {
-      // console.log(user.email); // 사용자 인증 정보가 변경될 때마다 해당 이벤트를 받아 처리합니다.
-      console.log(user); // 사용자 인증 정보가 변경될 때마다 해당 이벤트를 받아 처리합니다.
+  // onchange 함수를 리듀서로 만들었습니다.
+  // 성능 최적화를 위해 usecallback을 사용했습니다.
+  const onChangeEmail = useCallback((event: { target: { value: any } }) => {
+    dispatch({ type: 'CHANGE_EMAIL', payload: event.target.value });
+    dispatch({
+      type: 'CHANGE_EMAIL_MESSAGE',
+      payload: event.target.value,
     });
   }, []);
+
+  const onChangeNickname = useCallback((event: { target: { value: any } }) => {
+    dispatch({ type: 'CHANGE_NICKNAME', payload: event.target.value });
+    dispatch({
+      type: 'CHANGE_NICKNAME_MESSAGE',
+      payload: event.target.value,
+    });
+  }, []);
+
+  const onChangePassword = useCallback((event: { target: { value: any } }) => {
+    dispatch({ type: 'CHANGE_PASSWORD', payload: event.target.value });
+    dispatch({
+      type: 'CHANGE_PASSWORD_MESSAGE',
+      payload: event.target.value,
+    });
+  }, []);
+  // 비밀번호 확인은 비밀번호를 종속성으로 둡니다.
+  const onChangePasswordCheck = useCallback(
+    (event: { target: { value: any } }) => {
+      dispatch({ type: 'CHANGE_PASSWORDCHECK', payload: event.target.value });
+      dispatch({
+        type: 'CHANGE_PASSWORDCHECK_MESSAGE',
+        payload: event.target.value,
+      });
+    },
+    [password]
+  );
+  const navigate = useNavigate();
+
+  // const validateName = (input: string) => {
+  //   // 특수문자와 띄어쓰기를 입력하지 못하는 정규식 패턴
+  //   const pattern = /^[ㄱ-힣a-zA-Z]+$/;
+  //   return pattern.test(input);
+  // };
+
+  // const onChange = (event: { target: { name: any; value: any } }) => {
+  //   const {
+  //     target: { name, value },
+  //   } = event;
+  //   if (name === 'name') {
+  //     // 입력값이 특수문자와 띄어쓰기를 제외한 문자로 이루어져 있는지 검사
+  //     if (validateName(value)) {
+  //       setName(value);
+  //     }
+  //   }
+  //   if (name === 'email') {
+  //     setEmail(value);
+  //   }
+  //   if (name === 'password') {
+  //     setPassword(value);
+  //     // 비밀번호 입력이 변경되면 비교 검증
+  //     setIsFormValid(value === passwordCheck);
+  //   }
+  //   if (name === 'passwordCheck') {
+  //     setPasswordCheck(value);
+  //     // 비밀번호 확인 입력이 변경되면 비교 검증
+  //     setIsFormValid(password === value);
+  //   }
+  // };
+  // // 사용자 인증 정보 확인
+  // useEffect(() => {
+  //   // setIsFormValid(Boolean(email && password && passwordCheck && name));
+  //   setIsFormValid(password !== '' && password === passwordCheck);
+  //   onAuthStateChanged(auth, user => {
+  //     // console.log(user.email); // 사용자 인증 정보가 변경될 때마다 해당 이벤트를 받아 처리합니다.
+  //     console.log(user); // 사용자 인증 정보가 변경될 때마다 해당 이벤트를 받아 처리합니다.
+  //   });
+  // }, []);
+
+  // const signUp = async () => {
+  //   if (isFormValid) {
+  //   } else {
+  //     alert('비밀번호와 비밀번호 확인이 일치하지 않습니다.');
+  //   }
+  //   try {
+  //     //createUserWithEmailAndPassword 함수를 통해 회원가입을 하게 될 경우, 자동으로 로그인 됩니다.
+  //     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+  //     // 회원가입 성공시 userCrendential이라는 객체 안에 다양한 유저 정보가 담김.
+  //     console.log(userCredential);
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
 
   // const signUp = (event) => {
   //   event.preventDefault();
@@ -115,24 +183,26 @@ const JoinMembership = () => {
           <div className="base-typography">
             <h2>회원가입</h2>
           </div>
-          <form autoComplete="off">
+          <form autoComplete="off" method="post">
             <div className="sign-up-form__block">
               <div className="base-typography base-typography--label sign-up-form__label">
-                <label htmlFor="">이름</label>
+                <label htmlFor="">닉네임(8자 이하)</label>
               </div>
               <div className="input__container">
                 <input
                   id="user-name"
                   name="name"
                   type="text"
-                  value={name}
-                  onChange={onChange}
-                  placeholder="한글로 공백 없이 입력해주세요."
+                  value={nickName}
+                  onChange={onChangeNickname}
+                  placeholder="공백 없이 입력해주세요."
                   minLength={0}
-                  maxLength={16}
+                  maxLength={8}
                   autoComplete="off"
-                  onKeyDown={handleKeyDown}
                 />
+                {nickName.length > 0 && (
+                  <span className={`${isNickName ? 'error' : 'success'}`}>{nickNameMessage}</span>
+                )}
               </div>
             </div>
             <div className="sign-up-form__block">
@@ -146,7 +216,7 @@ const JoinMembership = () => {
                     name="email"
                     type="email"
                     value={email}
-                    onChange={onChange}
+                    onChange={onChangeEmail}
                     placeholder="이메일 주소를 입력해 주세요."
                     minLength={5}
                     maxLength={524288}
@@ -157,7 +227,7 @@ const JoinMembership = () => {
             </div>
             <div className="sign-up-form__block">
               <div className="base-typography base-typography--label sign-up-form__label">
-                <label htmlFor="">비밀번호</label>
+                <label htmlFor="">비밀번호(최소 8자)</label>
               </div>
               <div className="input__container">
                 <input
@@ -165,7 +235,7 @@ const JoinMembership = () => {
                   name="password"
                   type="password"
                   value={password}
-                  onChange={onChange}
+                  onChange={onChangePassword}
                   placeholder="비밀번호를 입력해주세요."
                   minLength={8}
                   maxLength={524288}
@@ -183,7 +253,7 @@ const JoinMembership = () => {
                   name="passwordCheck"
                   type="password"
                   value={passwordCheck}
-                  onChange={onChange}
+                  onChange={onChangePasswordCheck}
                   placeholder="비밀번호를 다시 입력해주세요."
                   minLength={8}
                   maxLength={524288}
@@ -192,13 +262,38 @@ const JoinMembership = () => {
               </div>
             </div>
             <button
-              onClick={signUp}
-              className="btn btn__with-icon--left sign-up-form__btn--submit btn--primary btn--wide"
+              onClick={async event => {
+                event.preventDefault();
+
+                if (!email || !nickName || !passwordCheck || !password) {
+                  alert('빈칸을 채워주세요!');
+                } else {
+                  try {
+                    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                    const collectionRef = collection(db, 'users');
+                    await addDoc(collectionRef, {
+                      email: email,
+                      nickName: nickName,
+                    });
+                    // 가입이 정상적으로 되면 프로필 페이지로 넘어갑니다.
+                    navigate('/AddProfile/', {
+                      state: { email: email, nick: nickName },
+                    });
+                    // 버튼을 누르면 인풋창이 빈칸으로 초기화됩니다.
+                    dispatch({ type: 'CLEAR' });
+                  } catch (error) {
+                    console.error(error);
+                  }
+                }
+              }}
+              className={`btn btn__with-icon--left sign-up-form__btn--submit btn--wide ${
+                isFormValid ? 'btn--primary' : ''
+              }`}
               type="submit"
               data-e2e="btn-sign-up">
               회원가입
             </button>
-            <Link className={`icon-button icon-button--left ${isFormValid ? 'btn--primary' : ''}`} to="/loginTab">
+            <Link className={`icon-button icon-button--left `} to="/loginTab">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path
                   fill-rule="evenodd"
@@ -217,3 +312,15 @@ const JoinMembership = () => {
 };
 
 export default JoinMembership;
+
+/* 
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    const { value } = event.currentTarget;
+    // 한글인지 체크 (한글은 2바이트, 영문 및 숫자는 1바이트로 처리)
+    const isKorean = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/.test(value);
+    // 스페이스바 입력 막기
+    if (event.key === ' ' || (isKorean && event.key === 'Spacebar')) {
+      event.preventDefault();
+    }
+  };
+*/

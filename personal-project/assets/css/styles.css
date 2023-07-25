@@ -163,10 +163,10 @@ button {
 
 .main-box {
   margin: 3em 10%;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-around;
   max-width: 100em;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  justify-items: center;
 }
 
 .cheack-box {
@@ -249,10 +249,53 @@ button {
   width: 50%;
 }
 
+.dropdown-content {
+  position: absolute;
+  display: flex;
+  flex-wrap: wrap;
+  z-index: 3;
+  transform-origin: top;
+  transform-origin: right;
+  line-height: 1.2;
+  font-size: 1.2em;
+  width: 50%;
+  height: 9em;
+  margin-left: 25%;
+  overflow: hidden;
+}
+
+.search-item {
+  padding: 0.5em 0 0.5em 0.5em;
+  display: flex;
+}
+
+.search-item::after {
+  content: "|";
+  position: relative;
+  text-align: center;
+  line-height: 1.3;
+  padding-left: 0.5em;
+  color: rgba(180, 180, 180, 0.3);
+}
+
 .search-button {
   position: relative;
   left: 0.5em;
   top: 0.3em;
+}
+
+.search-tab {
+  margin-top: 18em;
+}
+
+.search-results {
+  display: inline;
+  margin-left: 10%;
+  font-size: 2em;
+}
+
+.search-results > span {
+  font-weight: 800;
 }
 
 .report-info {
