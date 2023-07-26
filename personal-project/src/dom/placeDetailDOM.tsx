@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
+import { useSelector, shallowEqual } from 'react-redux';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import { Carousel } from 'react-responsive-carousel';
 import FooterDOM from './footerDOM';
@@ -9,6 +10,7 @@ import CultureReport from './report/cultureReport';
 import LeportsReport from './report/leportsReort';
 import ShoppingReport from './report/shoppingReport';
 import RestaurantReport from './report/restaurantReport';
+// import { Map, MapMarker } from 'react-kakao-maps-sdk';
 
 const PlaceDetailDOM = () => {
   let [baseInfo, setBaseInfo] = useState<Array<any>>([]); // 기본정보
@@ -17,6 +19,8 @@ const PlaceDetailDOM = () => {
   const searchParams = new URLSearchParams(location.search);
   const contentId = searchParams.get('contentId');
   const contentTypeId = searchParams.get('contentTypeId');
+  // const { lat, lon } = useSelector(state => state.locationReducer, shallowEqual);
+  // const { kakao } = window;
 
   const [isStarClicked, setIsStarClicked] = useState(false);
 
@@ -27,13 +31,13 @@ const PlaceDetailDOM = () => {
     // 기본정보 api
     async function baseData() {
       const res = await fetch(
-        `https://apis.data.go.kr/B551011/KorService1/detailCommon1?contentId=${contentId}&defaultYN=Y&addrinfoYN=Y&overviewYN=Y&MobileOS=WIN&MobileApp=zoroTravel&_type=json&serviceKey=${apiKey}`
+        `https://apis.data.go.kr/B551011/KorService1/detailCommon1?contentId=${contentId}&defaultYN=Y&addrinfoYN=Y&mapinfoYN=Y&overviewYN=Y&MobileOS=WIN&MobileApp=zoroTravel&_type=json&serviceKey=${apiKey}`
       );
       // console.log(res);
       const result = await res.json();
       // console.log(result);
       const infor: Array<any> = result.response.body.items.item;
-      // console.log(infor);
+      console.log(infor);
       setBaseInfo(infor);
     }
     // 이미지정보 api
@@ -49,13 +53,118 @@ const PlaceDetailDOM = () => {
       console.log(infor.length);
       setImgInfo(infor);
 
-      // document.cookie = 'safeCookie1=foo; SameSite=Lax';
-      // document.cookie = 'safeCookie2=foo';
       document.cookie = 'crossCookie=bar; SameSite=None; Secure';
     }
+
     baseData();
     imgData();
   }, []);
+
+  useEffect(() => {
+    /* const mapContainer = document.getElementById('kakao-map');
+    const mapOption = {
+      center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
+      level: 3, // 지도의 확대 레벨
+    };
+
+    var map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
+
+    // HTML5의 geolocation으로 사용할 수 있는지 확인합니다
+    if (navigator.geolocation) {
+      // GeoLocation을 이용해서 접속 위치를 얻어옵니다
+      navigator.geolocation.getCurrentPosition(function (position) {
+        var lat = position.coords.latitude, // 위도
+          lon = position.coords.longitude; // 경도
+
+        var locPosition = new kakao.maps.LatLng(lat, lon), // 마커가 표시될 위치를 geolocation으로 얻어온 좌표로 생성합니다
+          message = '<div style="padding:5px;">여기에 계신가요?!</div>'; // 인포윈도우에 표시될 내용입니다
+
+        // 마커와 인포윈도우를 표시합니다
+        displayMarker(locPosition, message);
+      });
+    } else {
+      // HTML5의 GeoLocation을 사용할 수 없을때 마커 표시 위치와 인포윈도우 내용을 설정합니다
+
+      var locPosition = new kakao.maps.LatLng(33.450701, 126.570667),
+        message = 'geolocation을 사용할수 없어요..';
+
+      displayMarker(locPosition, message);
+    }
+
+    // 지도에 마커와 인포윈도우를 표시하는 함수입니다
+    function displayMarker(locPosition, message) {
+      // 마커를 생성합니다
+      var marker = new kakao.maps.Marker({
+        map: map,
+        position: locPosition,
+      });
+
+      var iwContent = message, // 인포윈도우에 표시할 내용
+        iwRemoveable = true;
+
+      // 인포윈도우를 생성합니다
+      var infowindow = new kakao.maps.InfoWindow({
+        content: iwContent,
+        removable: iwRemoveable,
+      });
+
+      // 인포윈도우를 마커위에 표시합니다
+      infowindow.open(map, marker);
+
+      // 지도 중심좌표를 접속위치로 변경합니다
+      map.setCenter(locPosition);
+    } */
+    /*   const container = document.getElementById('kakao-map');
+    const options = {
+      center: new kakao.maps.LatLng(33.450701, 126.570667),
+      level: 3,
+    };
+    kakao.maps.load(() => {
+      const map = new kakao.maps.Map(container, options);
+
+      //위도, 경도로 변환 및 마커표시
+      var geocoder = new kakao.maps.services.Geocoder();
+      geocoder.addressSearch(baseInfo[0].addr1, function (result, status) {
+        if (status === kakao.maps.services.Status.OK) {
+          var coords = new kakao.maps.LatLng(+result[0].y, +result[0].x);
+          var marker = new kakao.maps.Marker({
+            map: map,
+            position: coords,
+          });
+
+          map.setCenter(coords);
+        }
+      });
+    }); */
+    /*  const container = document.querySelector('.kakao-map');
+    const options = {
+      center: new kakao.maps.LatLng(lat, lon),
+      level: 3,
+    };
+    const map = new kakao.maps.Map(container, options);
+    var geocoder = new kakao.maps.services.Geocoder();
+    geocoder.addressSearch(baseInfo[0].title, function (result, status) {
+      // 정상적으로 검색이 완료됐으면
+      if (status === kakao.maps.services.Status.OK) {
+        var coords = new kakao.maps.LatLng(baseInfo[0].mapy, baseInfo[0].mapx);
+
+        // 결과값으로 받은 위치를 마커로 표시합니다
+        var marker = new kakao.maps.Marker({
+          map: map,
+          position: coords,
+        });
+
+        // 인포윈도우로 장소에 대한 설명을 표시합니다
+        var infowindow = new kakao.maps.InfoWindow({
+          content: '<div style="width:150px;text-align:center;padding:6px 0;">' + `${baseInfo[0].title}` + '</div>',
+        });
+        infowindow.open(map, marker);
+
+        // 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
+        map.setCenter(coords);
+      }
+    }); */
+  }, [baseInfo]);
 
   const starClick = () => {
     setIsStarClicked(prevState => !prevState);
@@ -102,6 +211,7 @@ const PlaceDetailDOM = () => {
         {`${contentTypeId}` === '28' && <LeportsReport />}
         {`${contentTypeId}` === '38' && <ShoppingReport />}
         {`${contentTypeId}` === '39' && <RestaurantReport />}
+        {baseInfo.length > 0 && <div className="kakao-map"></div>}
       </div>
       <FooterDOM />
     </>
