@@ -197,6 +197,20 @@ button {
   font-size: 1.1em;
 }
 
+.pagination {
+  margin: 3em 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  text-align: center;
+  width: 18%;
+}
+
+.page-number {
+  font-size: 1.5em;
+}
+
 .head-dom {
   width: 100%;
   position: fixed;
@@ -394,7 +408,7 @@ button {
 .place-title {
   font-size: 2.3em;
   font-weight: bold;
-  padding-right: 0.5em;
+  padding-right: 0.3em;
 }
 
 .place-arr {
@@ -407,6 +421,10 @@ button {
   line-height: 1.5;
   margin-top: 1em;
   height: 50%;
+}
+
+.bi-star {
+  font-weight: 800;
 }
 
 .joinMembership-tab {

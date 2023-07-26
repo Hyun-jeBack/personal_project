@@ -7,27 +7,74 @@ const PlaceBox = ({ numOfRows, contentTypeId }: { numOfRows: Number; contentType
   const [information, setInformation] = useState<Array<any>>([]);
   const [selectedAreaCode, setSelectedAreaCode] = useState<number>(1);
 
+  const [totalDataCount, setTotalDataCount] = useState<number>(0);
+  const [currentPage, setCurrentPage] = useState<number>(1); // 페이지 번호
+  const pageSize = 20; // 한 페이지에 보여줄 데이터 개수
+  // let usePagination = numOfRows > pageSize; // true일 경우 페이지네이션 사용
+
   useEffect(() => {
     async function fetchData() {
       // api 인증키
       const apiKey = 'BmcxUTgMgiSjI9Oi1F9mGUHhiDrbyQK0p18TbQIG8LqwKvnuuVllKsa8X2tduc7tcdKOF9j59v1asYqd21dD%2Bg%3D%3D';
       // 페이지 번호
-      const pageNo = 1;
+      // const pageNo = 1;
       // 한 페이지 결과 수
       //const numOfRows = 20;
 
       const res = await fetch(
-        `https://apis.data.go.kr/B551011/KorService1/areaBasedList1?numOfRows=${numOfRows}&pageNo=${pageNo}&contentTypeId=${contentTypeId}&arrange=R&MobileOS=WIN&MobileApp=zoroTravel&_type=json&serviceKey=${apiKey}&areaCode=${selectedAreaCode}`
+        `https://apis.data.go.kr/B551011/KorService1/areaBasedList1?numOfRows=${pageSize}&pageNo=${currentPage}&contentTypeId=${contentTypeId}&arrange=R&MobileOS=WIN&MobileApp=zoroTravel&_type=json&serviceKey=${apiKey}&areaCode=${selectedAreaCode}`
       );
       //console.log(res);
       const result = await res.json();
       // console.log(result);
       const infor: Array<any> = result.response.body.items.item;
-      console.log(infor);
+      // console.log(infor);
       setInformation(infor);
+      const totalCount: number = result.response.body.totalCount;
+      setTotalDataCount(totalCount);
+      // console.log(numOfRows);
+
+      // document.cookie = 'safeCookie1=foo; SameSite=Lax';
+      // document.cookie = 'safeCookie2=foo';
+      document.cookie = 'crossCookie=bar; SameSite=None; Secure';
     }
     fetchData();
-  }, [selectedAreaCode, numOfRows, contentTypeId]);
+  }, [selectedAreaCode, numOfRows, contentTypeId, currentPage]);
+
+  // 전체 페이지 개수 계산
+  const totalPages = Math.ceil(+numOfRows / pageSize);
+
+  // totalPages 개수만큼 버튼을 생성하는 함수
+  const renderPageButtons = () => {
+    const buttons = [];
+    for (let i = 1; i <= totalPages; i++) {
+      buttons.push(
+        <button className="page-number" key={i} onClick={() => goToPage(i)} disabled={currentPage === i}>
+          {i}
+        </button>
+      );
+    }
+    return buttons;
+  };
+
+  // 페이지 번호 변경 함수
+  const goToPage = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  // 이전 페이지로 이동
+  const goToPrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(prevPage => prevPage - 1);
+    }
+  };
+
+  // 다음 페이지로 이동
+  const goToNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(prevPage => prevPage + 1);
+    }
+  };
 
   const handleAreaSelect = (areaCode: number) => {
     setSelectedAreaCode(areaCode);
@@ -61,6 +108,19 @@ const PlaceBox = ({ numOfRows, contentTypeId }: { numOfRows: Number; contentType
             </span>
           </div>
         ))}
+      </div>
+      <div className="pagination">
+        {+numOfRows > 20 && (
+          <button onClick={goToPrevPage} disabled={currentPage === 1}>
+            이전
+          </button>
+        )}
+        {+numOfRows > 20 && renderPageButtons()}
+        {+numOfRows > 20 && (
+          <button onClick={goToNextPage} disabled={currentPage === totalPages}>
+            다음
+          </button>
+        )}
       </div>
     </>
   );

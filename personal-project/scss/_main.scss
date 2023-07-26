@@ -12,7 +12,6 @@ $main-margin: 5%;
   // flex-wrap: wrap;
   // justify-content: space-around;
   max-width: 100em;
-  //min-height: calc(100vh - 100em);
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
   justify-items: center;
@@ -44,6 +43,20 @@ $main-margin: 5%;
 .palce-location {
   margin-top: 0.4em;
   font-size: 1.1em;
+}
+
+.pagination {
+  margin: 3em 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  text-align: center;
+  width: 18%;
+}
+
+.page-number {
+  font-size: 1.5em;
 }
 
 // .detail-place-tab {

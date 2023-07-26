@@ -73,7 +73,7 @@ $main-margin: 5%;
 .place-title {
   font-size: 2.3em;
   font-weight: bold;
-  padding-right: 0.5em;
+  padding-right: 0.3em;
 }
 
 .place-arr {
@@ -86,4 +86,8 @@ $main-margin: 5%;
   line-height: 1.5;
   margin-top: 1em;
   height: 50%;
+}
+
+.bi-star {
+  font-weight: 800;
 }
