@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import AreaSelectBox from './areaSelectBox';
 import SearchBox from './searchBox';
+import TopScrollButton from './topScrollButton';
 
 const PlaceBox = ({ numOfRows, contentTypeId }: { numOfRows: Number; contentTypeId?: Number }) => {
   const [information, setInformation] = useState<Array<any>>([]);
@@ -122,6 +123,7 @@ const PlaceBox = ({ numOfRows, contentTypeId }: { numOfRows: Number; contentType
           </button>
         )}
       </div>
+      <TopScrollButton />
     </>
   );
 };
