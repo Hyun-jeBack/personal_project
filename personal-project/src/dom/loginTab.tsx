@@ -1,20 +1,41 @@
-import { Link } from 'react-router-dom';
+import { GoogleAuthProvider, browserSessionPersistence, setPersistence, signInWithPopup } from 'firebase/auth';
+import { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { auth } from '../firebase/firebase';
 
 const LoginTab = () => {
+
+
+const [userData, setUserData] = useState('');
+const navigate = useNavigate();
+
+const handleGoogleLogin = () => {
+  const provider = new GoogleAuthProvider(); // provider 구글 설정
+  setPersistence(auth, browserSessionPersistence)
+  .then(() => {
+    return signInWithPopup(auth, provider) // 팝업창 띄워서 로그인
+      .then((data) => {
+        setUserData(data.user); // user data 설정
+        console.log(data); // console에 UserCredentialImpl 출력
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+  })
+  }
+
+  useEffect(() => {
+    console.log('userData changed:', userData);
+    if (userData) {
+      // 로그인이 완료되면 메인 페이지로 이동
+      navigate('/');
+    }
+  }, [userData])
+  
+
   return (
     <>
-      {/*       <div className="login-tab">
-        <h2 className="main-logo">
-          <Link to="/">제로여행</Link>
-        </h2>
-        <span className="login-taxt">───&nbsp; 로그인 &nbsp;───</span>
-        <input type="text" className="id-input" placeholder="아이디를 입력하세요." />
-        <input type="text" className="password-input" placeholder="비밀번호를 입력하세요." />
-        <button className="login-button">로그인</button>
-        <span className="or-text">또는</span>
-        <div className="google-login">google-login</div>
-        <Link to="/joinMembership">회원가입하기</Link>
-      </div> */}
       <div className="login-tab">
         <main>
           <section className="account__layout">
@@ -26,7 +47,7 @@ const LoginTab = () => {
                 <h2>로그인</h2>
               </div>
               <section className="sign-in-google undefined">
-                <button className="btn--google btn--wide" type="button">
+                <button onClick={handleGoogleLogin} className="btn--google btn--wide" type="button">
                   <img
                     src="https://festival-moa-fc37b.firebaseapp.com/images/Google.jpeg"
                     alt="google-logo"

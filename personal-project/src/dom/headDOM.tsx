@@ -1,11 +1,14 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { user } from '../firebase/firebase';
 
 const HeadDOM = (): React.ReactElement => {
   const location = useLocation();
   const isWishlistPage = location.pathname === '/wishlistTab';
   const isLoginPage = location.pathname === '/loginTab';
   const isJoinMembershipPage = location.pathname === '/joinMembership';
+
+  console.log(user?.email)
 
   return (
     <>

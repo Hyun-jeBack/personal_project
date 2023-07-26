@@ -31,4 +31,17 @@ const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const storage = getStorage(app);
 export const db = getFirestore(app);
+export const user = auth.currentUser;
 export default app;
+
+
+/* 
+
+console.log(user.photoURL);  // 프로필 사진 URL
+console.log(user.phoneNumber);  // 휴대폰 번호
+console.log(user.metadata);  // 사용자 메타데이터(createdAt, creationTime, lastLoginAt, lastSignInTime)
+console.log(user.email);  // 이메일
+console.log(user.displayName);  // 표시 이름
+console.log(user.emailVerified);  // 이메일 인증 여부(boolean)
+console.log(user.isAnonymous);  // 익명 여부(boolean)
+*/
